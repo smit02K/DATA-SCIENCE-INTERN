@@ -5,7 +5,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 
-df = pd.read_csv("C:/Users/JAY MATAJI/OneDrive/Desktop/Datascience intern/Titanic dataset.csv")
+df = pd.read_csv("Titanic dataset.csv")
 print(df)
 
 #bos = load_boston
