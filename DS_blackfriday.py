@@ -110,23 +110,43 @@ df['C']=df['C'].astype(int)
 #print(df.info())
 
 ##Feature Scaling
-df_test=df[df['Purchase'].isnull()]
-df_train=df[~df['Purchase'].isnull()]
-X=df_train.drop('Purchase',axis=1)
+selector = ExtraTreesRegressor()
+selector.fit(X, Y)
+feature_imp = selector.feature_importances_
+X.drop(['Gender', 'City_Category', 'Marital_Status'], axis = 1, inplace = True)
 
-#print(X.head())
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = 0.2, random_state = 0)
+lin_reg = LinearRegression()
+knn = KNeighborsRegressor()
+dec_tree = DecisionTreeRegressor()
+ran_for = RandomForestRegressor()
+dtc=DecisionTreeClassifier()
 
-y=df_train['Purchase']
-print(X.head())
+print("MEAN SQUARED ERRORS")
+lin_reg.fit(X_train, Y_train)
+Y_pred_lin_reg = lin_reg.predict(X_test)
+print("Linear Regression: ",mean_squared_error(Y_test, Y_pred_lin_reg))
 
-from sklearn.model_selection import train_test_split
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
 
-X_train.drop('Product_ID',axis=1,inplace=True)
-X_test.drop('Product_ID',axis=1,inplace=True)
+knn.fit(X_train, Y_train)
+Y_pred_knn = knn.predict(X_test)
+print("KNN regression: ",mean_squared_error(Y_test, Y_pred_knn))
 
-from sklearn.preprocessing import StandardScaler
-sc=StandardScaler()
-X_train=sc.fit_transform(X_train)
-X_test=sc.transform(X_test)
 
+dec_tree.fit(X_train, Y_train)
+Y_pred_dec = dec_tree.predict(X_test)
+print("Decision tree regression: ",mean_squared_error(Y_test, Y_pred_dec))
+
+
+ran_for.fit(X_train, Y_train)
+Y_pred_ran_for = ran_for.predict(X_test)
+print("Random forest regression: ",mean_squared_error(Y_test, Y_pred_ran_for))
+
+
+'''
+MEAN SQUARED ERRORS
+Linear Regression:  22044840.101023477
+KNN regression:  10469708.932551857
+Decision tree regression:  9843766.502839973
+Random forest regression:  9058790.950768305
+'''
